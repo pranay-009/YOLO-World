@@ -1,5 +1,10 @@
 ## Deploy YOLO-World
 
+- [x] ONNX export
+- [x] ONNX demo
+- [ ] TensorRT
+- [ ] TFLite
+
 We provide several ways to deploy YOLO-World with ONNX or TensorRT
 
 ### Priliminaries
@@ -22,6 +27,23 @@ You can also use [`export_onnx.py`](../deploy/export_onnx.py) to obtain the ONNX
 
 ```bash
 PYTHONPATH=./ python deploy/export_onnx.py path/to/config path/to/weights --custom-text path/to/customtexts --opset 11
+```
+
+If you don't want to include `NMS` or "post-processing" into the ONNX model, you can add `--without-nms`
+```bash
+PYTHONPATH=./ python deploy/export_onnx.py path/to/config path/to/weights --custom-text path/to/customtexts --opset 11 --without-nms
+```
+
+If you want to quantize YOLO-World with ONNX model, you'd better remove `NMS` and `bbox_decoder` by adding `--without-bbox-decoder`
+
+```bash
+PYTHONPATH=./ python deploy/export_onnx.py path/to/config path/to/weights --custom-text path/to/customtexts --opset 11 --without-bbox-decoder
+```
+
+**Running ONNX demo**
+
+```bash
+python deploy/onnx_demo.py path/to/model.onnx path/to/images path/to/texts
 ```
 
 

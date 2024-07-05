@@ -1,5 +1,5 @@
 _base_ = ('../../third_party/mmyolo/configs/yolov8/'
-          'yolov8_m_syncbn_fast_8xb16-500e_coco.py')
+          'yolov8_x_syncbn_fast_8xb16-500e_coco.py')
 custom_imports = dict(imports=['yolo_world'],
                       allow_failed_imports=False)
 
@@ -15,7 +15,7 @@ neck_num_heads = [4, 8, _base_.last_stage_out_channels // 2 // 32]
 base_lr = 2e-3
 weight_decay = 0.05 / 2
 train_batch_size_per_gpu = 16
-text_model_name = '../pretrained_models/clip-vit-base-patch32-projection'
+# text_model_name = '../pretrained_models/clip-vit-base-patch32-projection'
 text_model_name = 'openai/clip-vit-base-patch32'
 # model settings
 model = dict(
@@ -36,14 +36,12 @@ model = dict(
               guide_channels=text_channels,
               embed_channels=neck_embed_channels,
               num_heads=neck_num_heads,
-              block_cfg=dict(type='MaxSigmoidCSPLayerWithTwoConv',
-                             use_einsum=False)),
+              block_cfg=dict(type='MaxSigmoidCSPLayerWithTwoConv')),
     bbox_head=dict(type='YOLOWorldHead',
                    head_module=dict(type='YOLOWorldHeadModule',
                                     use_bn_head=True,
                                     embed_dims=text_channels,
-                                    num_classes=num_training_classes,
-                                    use_einsum=False)),
+                                    num_classes=num_training_classes)),
     train_cfg=dict(assigner=dict(num_classes=num_training_classes)))
 
 # dataset settings
@@ -57,7 +55,6 @@ text_transform = [
          meta_keys=('img_id', 'img_path', 'ori_shape', 'img_shape', 'flip',
                     'flip_direction', 'texts'))
 ]
-
 train_pipeline = [
     *_base_.pre_transform,
     dict(type='MultiModalMosaic',
@@ -75,7 +72,6 @@ train_pipeline = [
     *_base_.last_transform[:-1],
     *text_transform,
 ]
-
 train_pipeline_stage2 = [*_base_.train_pipeline_stage2[:-1], *text_transform]
 obj365v1_train_dataset = dict(
     type='MultiModalDataset',
@@ -103,13 +99,24 @@ flickr_train_dataset = dict(
     filter_cfg=dict(filter_empty_gt=True, min_size=32),
     pipeline=train_pipeline)
 
+
+cc3m_train_dataset = dict(type='YOLOv5GeneralGroundingDataset',
+                          data_root='data/cc3m/',
+                          ann_file='annotations/cc3m_pseudo_annotations.json',
+                          data_prefix=dict(img='training'),
+                          filter_cfg=dict(filter_empty_gt=True, min_size=32),
+                          pipeline=train_pipeline)
+
+
 train_dataloader = dict(batch_size=train_batch_size_per_gpu,
                         collate_fn=dict(type='yolow_collate'),
                         dataset=dict(_delete_=True,
                                      type='ConcatDataset',
                                      datasets=[
                                          obj365v1_train_dataset,
-                                         flickr_train_dataset, mg_train_dataset
+                                         flickr_train_dataset,
+                                         mg_train_dataset,
+                                         cc3m_train_dataset
                                      ],
                                      ignore_keys=['classes', 'palette']))
 

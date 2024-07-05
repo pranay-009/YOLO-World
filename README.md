@@ -35,6 +35,10 @@
 We recommend that everyone **use English to communicate on issues**, as this helps developers from around the world discuss, share experiences, and answer questions together.
 
 ## 🔥 Updates 
+`[2024-5-18]:` YOLO-World models have been [integrated with the FiftyOne computer vision toolkit](https://docs.voxel51.com/integrations/ultralytics.html#open-vocabulary-detection) for streamlined open-vocabulary inference across image and video datasets.  
+`[2024-5-16]:` Hey guys! Long time no see! This update contains (1) [fine-tuning guide](https://github.com/AILab-CVC/YOLO-World?#highlights--introduction) and (2) [TFLite Export](./docs/tflite_deploy.md) with INT8 Quantization.  
+`[2024-5-9]:` This update contains the real [`reparameterization`](./docs/reparameterize.md) 🪄, and it's better for fine-tuning on custom datasets and improves the training/inference efficiency 🚀!  
+`[2024-4-28]:` Long time no see! This update contains bugfixs and improvements: (1) ONNX demo; (2) image demo (support tensor input); (2) new pre-trained models; (3) image prompts; (4) simple version for fine-tuning / deployment; (5) guide for installation (include a `requirements.txt`).  
 `[2024-3-28]:` We provide: (1) more high-resolution pre-trained models (e.g., S, M, X) ([#142](https://github.com/AILab-CVC/YOLO-World/issues/142)); (2) pre-trained models with CLIP-Large text encoders. Most importantly, we preliminarily fix the **fine-tuning without `mask-refine`** and explore a new fine-tuning setting ([#160](https://github.com/AILab-CVC/YOLO-World/issues/160),[#76](https://github.com/AILab-CVC/YOLO-World/issues/76)). In addition, fine-tuning YOLO-World with `mask-refine` also obtains significant improvements, check more details in [configs/finetune_coco](./configs/finetune_coco/).  
 `[2024-3-16]:` We fix the bugs about the demo ([#110](https://github.com/AILab-CVC/YOLO-World/issues/110),[#94](https://github.com/AILab-CVC/YOLO-World/issues/94),[#129](https://github.com/AILab-CVC/YOLO-World/issues/129), [#125](https://github.com/AILab-CVC/YOLO-World/issues/125)) with visualizations of segmentation masks, and release [**YOLO-World with Embeddings**](./docs/prompt_yolo_world.md), which supports prompt tuning, text prompts and image prompts.  
 `[2024-3-3]:` We add the **high-resolution YOLO-World**, which supports `1280x1280` resolution with higher accuracy and better performance for small objects!  
@@ -77,10 +81,9 @@ This repo contains the PyTorch implementation, pre-trained weights, and pre-trai
 * YOLO-World presents a *prompt-then-detect* paradigm for efficient user-vocabulary inference, which re-parameterizes vocabulary embeddings as parameters into the model and achieve superior inference speed. You can try to export your own detection model without extra training or fine-tuning in our [online demo](https://huggingface.co/spaces/stevengrove/YOLO-World)!
 
 
-<center>
+<div align="center">
 <img width=800px src="./assets/yolo_arch.png">
-</center>
-
+</div>
 ## Model Zoo
 
 We've pre-trained YOLO-World-S/M/L from scratch and evaluate on the `LVIS val-1.0` and `LVIS minival`. We provide the pre-trained model weights and training logs for applications/research or re-producing the results.
@@ -101,7 +104,8 @@ We've pre-trained YOLO-World-S/M/L from scratch and evaluate on the `LVIS val-1.
 | [YOLO-Worldv2-L (CLIP-Large)](./configs/pretrain/yolo_world_v2_l_clip_large_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_800ft_lvis_minival.py) 🔥  | O365+GoldG | 800&#x1F538; | 35.5 | 28.3 | 33.2 | 38.8 | 28.6 | 22.0 | 25.1 | 35.4 | [HF Checkpoints 🤗](https://huggingface.co/wondervictor/YOLO-World/blob/main/yolo_world_v2_l_clip_large_o365v1_goldg_pretrain_800ft-9df82e55.pth)|
 | [YOLO-Worldv2-L](./configs/pretrain/yolo_world_v2_l_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_lvis_minival.py) | O365+GoldG+CC3M-Lite | 640 | 32.9 | 25.3 | 31.1 | 35.8 | 26.1 | 20.6 | 22.6 | 32.3 | [HF Checkpoints 🤗](https://huggingface.co/wondervictor/YOLO-World/blob/main/yolo_world_v2_l_obj365v1_goldg_cc3mlite_pretrain-ca93cd1f.pth)|
 | [YOLO-Worldv2-X](./configs/pretrain/yolo_world_v2_x_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_lvis_minival.py) | O365+GoldG+CC3M-Lite | 640 | 35.4 | 28.7 | 32.9 | 38.7 | 28.4 | 20.6 | 25.6 | 35.0 | [HF Checkpoints 🤗](https://huggingface.co/wondervictor/YOLO-World/blob/main/yolo_world_v2_x_obj365v1_goldg_cc3mlite_pretrain-8698fbfa.pth) |
-| [YOLO-Worldv2-XL](./configs/pretrain/yolo_world_v2_xl_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_lvis_minival.py) | O365+GoldG+CC3M-Lite | 640 | 36.0 | 25.8 | 34.1 | 39.5 | 29.1 | 21.1 | 26.3 | 35.8 | [HF Checkpoints 🤗](https://huggingface.co/wondervictor/YOLO-World/blob/main/yolo_world_v2_x_obj365v1_goldg_cc3mlite_pretrain-8698fbfa.pth) |
+| 🔥 [YOLO-Worldv2-X]() |  O365+GoldG+CC3M-Lite | 1280&#x1F538; | 37.4 | 30.5 | 35.2 | 40.7  | 29.8 | 21.1 | 26.8 | 37.0 | [HF Checkpoints 🤗](https://huggingface.co/wondervictor/YOLO-World/blob/main/yolo_world_v2_x_obj365v1_goldg_cc3mlite_pretrain_1280ft-14996a36.pth) |
+| [YOLO-Worldv2-XL](./configs/pretrain/yolo_world_v2_xl_vlpan_bn_2e-3_100e_4x8gpus_obj365v1_goldg_train_lvis_minival.py) | O365+GoldG+CC3M-Lite | 640 | 36.0 | 25.8 | 34.1 | 39.5 | 29.1 | 21.1 | 26.3 | 35.8 | [HF Checkpoints 🤗](https://huggingface.co/wondervictor/YOLO-World/blob/main/yolo_world_v2_xl_obj365v1_goldg_cc3mlite_pretrain-5daf1395.pth) |
 
 </font>
 </div>
@@ -125,7 +129,7 @@ We provide the pre-training logs of `YOLO-World-v2`. Due to the unexpected error
 
 ### 1. Installation
 
-YOLO-World is developed based on `torch==1.11.0` `mmyolo==0.6.0` and `mmdetection==3.0.0`.
+YOLO-World is developed based on `torch==1.11.0` `mmyolo==0.6.0` and `mmdetection==3.0.0`. Check more details about `requirements` and `mmcv` in [docs/installation](./docs/installation.md).
 
 #### Clone Project 
 
@@ -168,48 +172,44 @@ chmod +x tools/dist_test.sh
 
 ## Fine-tuning YOLO-World
 
-We provide the details about fine-tuning YOLO-World in [docs/fine-tuning](./docs/finetuning.md).
+<div align="center">
+<img src="./assets/finetune_yoloworld.png" width=800px>
+</div>
+
+
+<div align="center">
+<b><p>Chose your pre-trained YOLO-World and Fine-tune it!</p></b> 
+</div>
+
+
+YOLO-World supports **zero-shot inference**, and three types of **fine-tuning recipes**: **(1) normal fine-tuning**, **(2) prompt tuning**, and **(3) reparameterized fine-tuning**.
+
+* Normal Fine-tuning: we provide the details about fine-tuning YOLO-World in [docs/fine-tuning](./docs/finetuning.md).
+
+* Prompt Tuning: we provide more details ahout prompt tuning in [docs/prompt_yolo_world](./docs/prompt_yolo_world.md).
+
+* Reparameterized Fine-tuning: the reparameterized YOLO-World is more suitable for specific domains far from generic scenes. You can find more details in [docs/reparameterize](./docs/reparameterize.md).
 
 ## Deployment
 
 We provide the details about deployment for downstream applications in [docs/deployment](./docs/deploy.md).
 You can directly download the ONNX model through the online [demo](https://huggingface.co/spaces/stevengrove/YOLO-World) in Huggingface Spaces 🤗.
 
+- [x] ONNX export and demo: [docs/deploy](https://github.com/AILab-CVC/YOLO-World/blob/master/docs/deploy.md)
+- [x] TFLite and INT8 Quantization: [docs/tflite_deploy](https://github.com/AILab-CVC/YOLO-World/blob/master/docs/tflite_deploy.md)
+- [ ] TensorRT: coming soon.
+- [ ] C++: coming soon.
+
 ## Demo
 
-### Gradio Demo
+See [`demo`](./demo) for more details
 
-We provide the [Gradio](https://www.gradio.app/) demo for local devices:
-
-```bash
-pip install gradio==4.16.0
-python demo.py path/to/config path/to/weights
-```
-
-Additionaly, you can use a Dockerfile to build an image with gradio. As a prerequisite, make sure you have respective drivers installed alongside [nvidia-container-runtime](https://stackoverflow.com/questions/59691207/docker-build-with-nvidia-runtime). Replace MODEL_NAME and WEIGHT_NAME with the respective values or ommit this and use default values from the [Dockerfile](Dockerfile#3)
-
-```bash
-docker build --build-arg="MODEL=MODEL_NAME" --build-arg="WEIGHT=WEIGHT_NAME" -t yolo_demo .
-docker run --runtime nvidia -p 8080:8080
-```
-
-### Image Demo
-
-We provide a simple image demo for inference on images with visualization outputs.
-
-```bash
-python image_demo.py path/to/config path/to/weights image/path/directory 'person,dog,cat' --topk 100 --threshold 0.005 --output-dir demo_outputs
-```
-
-**Notes:**
-* The `image` can be a directory or a single image.
-* The `texts` can be a string of categories (noun phrases) which is separated by a comma. We also support `txt` file in which each line contains a category ( noun phrases).
-* The `topk` and `threshold` control the number of predictions and the confidence threshold.
-
-### Google Golab Notebook
-
-We sincerely thank [Onuralp](https://github.com/onuralpszr) for sharing the [Colab Demo](https://colab.research.google.com/drive/1F_7S5lSaFM06irBCZqjhbN7MpUXo6WwO?usp=sharing), you can have a try 😊！
-
+- [x] `gradio_demo.py`: Gradio demo, ONNX export
+- [x] `image_demo.py`: inference with images or a directory of images
+- [x] `simple_demo.py`: a simple demo of YOLO-World, using `array` (instead of path as input).
+- [x] `video_demo.py`: inference YOLO-World on videos.
+- [x] `inference.ipynb`: jupyter notebook for YOLO-World.
+- [x] [Google Colab Notebook](https://colab.research.google.com/drive/1F_7S5lSaFM06irBCZqjhbN7MpUXo6WwO?usp=sharing): We sincerely thank [Onuralp](https://github.com/onuralpszr) for sharing the [Colab Demo](https://colab.research.google.com/drive/1F_7S5lSaFM06irBCZqjhbN7MpUXo6WwO?usp=sharing), you can have a try 😊！
 
 ## Acknowledgement
 
@@ -228,4 +228,4 @@ If you find YOLO-World is useful in your research or applications, please consid
 ```
 
 ## Licence
-YOLO-World is under the GPL-v3 Licence and is supported for comercial usage.
+YOLO-World is under the GPL-v3 Licence and is supported for commercial usage. If you need a commercial license for YOLO-World, please feel free to contact us.
